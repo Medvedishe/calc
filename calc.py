@@ -1,13 +1,14 @@
 from tkinter import *
 from decimal import *
+import math
 
 root = Tk()
 root.title('Calculator')
 
-buttons = (('7', '8', '9', '/', '4'),
-           ('4', '5', '6', '*', '4'),
-           ('1', '2', '3', '-', '4'),
-           ('0', '.', '=', '+', '4')
+buttons = (('7', '8', '9', '/','sin' ,'5'),
+           ('4', '5', '6', '*','cos', '5'),
+           ('1', '2', '3', '-','tan', '5'),
+           ('0', '.', '=', '+','sqrt', '5')
            )
 
 activeStr = ''
@@ -20,7 +21,8 @@ def calculate():
     operand2 = Decimal(stack.pop())
     operation = stack.pop()
     operand1 = Decimal(stack.pop())
-
+    if operation == 'sin':
+        result = math.sin(operand1)
     if operation == '+':
         result = operand1 + operand2
     if operation == '-':
@@ -46,6 +48,11 @@ def click(text):
         if activeStr.find('.') == -1:
             activeStr += text
             label.configure(text=activeStr)
+    elif text == 'sin':
+        stack.append(activeStr)
+        stack.append('sin')
+        stack.append(0)
+        calculate()
     else:
         if len(stack) >= 2:
             stack.append(label['text'])
@@ -68,7 +75,7 @@ label.grid(row=0, column=0, columnspan=4, sticky="nsew")
 button = Button(root, text='CE', command=lambda text='CE': click(text))
 button.grid(row=1, column=3, sticky="nsew")
 for row in range(4):
-    for col in range(4):
+    for col in range(5):
         button = Button(root, text=buttons[row][col],
                         command=lambda row=row, col=col: click(buttons[row][col]))
         button.grid(row=row + 2, column=col, sticky="nsew")
