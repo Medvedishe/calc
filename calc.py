@@ -1,13 +1,14 @@
 from tkinter import *
 from decimal import *
+import math
 
 root = Tk()
 root.title('Calculator')
-
-buttons = (('7', '8', '9', '/', '4'),
-           ('4', '5', '6', '*', '4'),
-           ('1', '2', '3', '-', '4'),
-           ('0', '.', '=', '+', '4')
+#add buttons of hyperbolic functions 
+buttons = (('7', '8', '9', '/','sin' , 'sh', '6'),
+           ('4', '5', '6', '*','cos', 'ch','6'),
+           ('1', '2', '3', '-','tan', 'tanh','6'),
+           ('0', '.', '=', '+','sqrt','sqr', '6')
            )
 
 activeStr = ''
@@ -20,7 +21,14 @@ def calculate():
     operand2 = Decimal(stack.pop())
     operation = stack.pop()
     operand1 = Decimal(stack.pop())
-
+    if operation == 'sin':
+        result = math.sin(operand1)
+    if operation == 'cos':
+        result = math.cos(operand1)
+    if operation == 'tan':
+        result = math.tan(operand1)
+    if operation == 'sqrt':
+        result = math.sqrt(operand1)
     if operation == '+':
         result = operand1 + operand2
     if operation == '-':
@@ -30,7 +38,6 @@ def calculate():
     if operation == '*':
         result = operand1 * operand2
     label.configure(text=str(result))
-
 
 def click(text):
     global activeStr
@@ -46,6 +53,26 @@ def click(text):
         if activeStr.find('.') == -1:
             activeStr += text
             label.configure(text=activeStr)
+    elif text == 'sin':
+        stack.append(activeStr)
+        stack.append('sin')
+        stack.append(0)
+        calculate()
+    elif text == 'cos':
+        stack.append(activeStr)
+        stack.append('cos')
+        stack.append(0)
+        calculate()
+    elif text == 'tan':
+        stack.append(activeStr)
+        stack.append('tan')
+        stack.append(0)
+        calculate()
+    elif text == 'sqrt':
+        stack.append(activeStr)
+        stack.append('sqrt')
+        stack.append(0)
+        calculate()
     else:
         if len(stack) >= 2:
             stack.append(label['text'])
@@ -62,13 +89,12 @@ def click(text):
                 activeStr = ''
                 label.configure(text='0')
                 
-label = Label(root, text='0', width=35)
+label = Label(root, text='enter you numbers', width=35)
 label.grid(row=0, column=0, columnspan=4, sticky="nsew")
-
 button = Button(root, text='CE', command=lambda text='CE': click(text))
-button.grid(row=1, column=3, sticky="nsew")
+button.grid(row=1, column=5, sticky="nsew")
 for row in range(4):
-    for col in range(4):
+    for col in range(6):
         button = Button(root, text=buttons[row][col],
                         command=lambda row=row, col=col: click(buttons[row][col]))
         button.grid(row=row + 2, column=col, sticky="nsew")
